@@ -18,7 +18,7 @@
 class motorhandler  {
 public:
 
-    motorhandler(int i2c_address);
+    motorhandler();
 
     void armEsc() ;
     void disarmEsc();
