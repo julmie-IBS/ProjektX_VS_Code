@@ -15,6 +15,7 @@
 #define DATA_OUTPUT_X_MSB_REGISTER 0x03
 
 
+
 class Compass : public ISensor {
 public:
     Compass(int i2c_address);
@@ -36,9 +37,6 @@ private:
 
 
 };
-
-
-
 
 
 #endif

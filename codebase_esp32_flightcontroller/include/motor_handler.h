@@ -1,6 +1,3 @@
-
-
-
 #ifndef Motor_Handler_h
 #define Motor_Handler_h
 
