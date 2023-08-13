@@ -1,3 +1,6 @@
+
+
+
 #ifndef Motor_Handler_h
 #define Motor_Handler_h
 
@@ -20,7 +23,7 @@ public:
 
     motorhandler();
 
-    void armEsc() ;
+    void armEsc();
     void disarmEsc();
     void writeEsc(byte*);
  
@@ -29,8 +32,5 @@ public:
 
 
 
-
-
-
-
 #endif
+

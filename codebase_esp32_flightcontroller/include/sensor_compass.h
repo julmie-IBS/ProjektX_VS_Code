@@ -29,14 +29,13 @@ private:
     int i2c_address;
     int length = 6;
     byte dataBuffer[6];
+
+    byte identification_reg_a;
+    byte identification_reg_b;
+    byte identification_reg_c;
+
+
 };
-
-
-
-
-
-
-
 
 
 

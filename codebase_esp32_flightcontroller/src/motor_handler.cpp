@@ -1,31 +1,29 @@
+
+
 #include "motor_handler.h"
 
 
 
-class motorhandler  {
-public:
-
-
-    motorhandler()
+    motorhandler::motorhandler()
     {
             
     }
 
-    void armEsc() 
+    void motorhandler::armEsc() 
     {
 
     }
 
-    void disarmEsc()
+    void motorhandler::disarmEsc()
     {
         
     }
     
-    void writeEsc(byte*)
+    void motorhandler::writeEsc(byte*)
     {
         
     }
  
 
 
-};
+
