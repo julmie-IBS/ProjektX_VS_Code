@@ -50,8 +50,12 @@ public:
     // add startbit, pakettype endbyte and crc
 
 
-    u_int16_t* getThrustPaketfromPi();
+    int getThrustPaketfromPi();
     // get back a pointer from thrust value array
+
+
+
+    u_int16_t* getThrustValues();
 
 
 

@@ -15,12 +15,12 @@
 
 raspPi::raspPi()
 {
-
+    SERIAL_PI.begin(PI_BAUDRATE);
 }
 
 u_int8_t raspPi::init()
 {
-    SERIAL_PI.begin(PI_BAUDRATE);
+    
 
     //this is a test start sequeunz
     //TODO CRC
@@ -231,23 +231,36 @@ int raspPi::sendSensorPaket2Pi(byte* sensorpaket, int lenghtSensorpaket)
     //copy sensorvalues to outputbuffer
     // startbyte, lenght ,SENSOR_PAKET,endbyte,crc
 
-    uint8_t crc = 0;
 
+
+    // HEADER OF PAKET
+    uint8_t crc = 0;
     outputBuffer[0] = PI_START_BYTE;
     outputBuffer[1] = lenghtSensorpaket + 4;
     outputBuffer[2] = PI_SENSOR_PAKET_BYTE;
+    //crc ^=outputBuffer[0];
+    //crc ^=outputBuffer[1];
+    //crc ^=outputBuffer[2];
 
+
+
+    // PAYLOAD OF PAKET
     for (size_t i = 0; i < lenghtSensorpaket; i++) 
     {
         outputBuffer[2+i+1]=sensorpaket[i];
     }
 
-    // calculate crc byte
+    // calculate crc byte    +2 to exclude crc and endbyte
 
-    for (int i = 0; i < (lenghtSensorpaket + 4); i++) 
+    for (int i = 0; i < (lenghtSensorpaket + 2); i++) 
     {
     crc ^= outputBuffer[i];  // XOR with data byte
     }
+
+
+    //END OF PAKET
+    outputBuffer[lenghtSensorpaket+2] = crc;
+    outputBuffer[lenghtSensorpaket+3] = PI_END_BYTE;
 
     sendData2Pi(outputBuffer,(lenghtSensorpaket + 4));
 
@@ -257,7 +270,7 @@ int raspPi::sendSensorPaket2Pi(byte* sensorpaket, int lenghtSensorpaket)
 }
 
 
-u_int16_t* raspPi::getThrustPaketfromPi()
+int raspPi::getThrustPaketfromPi()
 {
     //lenght of a Thrustpaket is 
     // start + end + lenght + crc + PI_THRUST_PAKET_BYTE + 2*4 thrustvalues
@@ -270,13 +283,13 @@ u_int16_t* raspPi::getThrustPaketfromPi()
 
     if (rc!=0)
     {
-        return nullptr;
+        return rc;
     }
 
 
     if (!((inputBuffer[2]==PI_THRUST_PAKET_BYTE) && inputBufferLenght==ThrustPaketLenght))
     {
-       return nullptr;
+       return rc;
     }
 
 
@@ -296,10 +309,14 @@ u_int16_t* raspPi::getThrustPaketfromPi()
     thrustValues[3]=thrustValues[0]<<8;
     thrustValues[3] = thrustValues[0] & inputBuffer[10];
     
+    return 0;
 
 
+
+}
+
+
+u_int16_t* raspPi::getThrustValues()
+{
     return this->thrustValues;
-
-
-
 }
