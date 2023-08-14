@@ -18,11 +18,15 @@
 class motorhandler  {
 public:
 
+
+
     motorhandler();
 
     void armEsc();
     void disarmEsc();
-    void writeEsc(byte*);
+
+    void writeEsc(u_int16_t* thrustValues);
+    // min max check
  
 };
 
