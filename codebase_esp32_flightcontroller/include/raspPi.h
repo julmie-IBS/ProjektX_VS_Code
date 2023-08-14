@@ -20,6 +20,9 @@
 #define PI_STARTCALIBRATION_BYTE    0x02
 #define PI_STARTRUNMODE_BYTE        0x03
 #define PI_RUNMODE_BYTE             0x04
+#define PI_SENSOR_PAKET_BYTE        0x05
+#define PI_THRUST_PAKET_BYTE        0x06
+
 
 
 
@@ -39,7 +42,7 @@ public:
     //TODO find out how to do this smooth
 
     u_int8_t startRunMode();
-    //send a message to the pi that it should go into a calibration state.
+    //send a message to the pi that it should go into a run state.
   
 
     int sendSensorPaket2Pi(byte* sensorpaket, int lenghtSensorpaket);
@@ -63,6 +66,7 @@ private:
 
     u_int16_t thrustValues[4];
     byte inputBuffer[50];
+    byte outputBuffer[50];
     int inputBufferLenght;
     // buffer for incomming data
 
@@ -88,13 +92,6 @@ private:
 
     u_int16_t PiDataAvailable();
 
-
-    
-
-
-
-    
-    
 
 
 

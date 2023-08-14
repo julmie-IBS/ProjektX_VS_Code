@@ -89,15 +89,14 @@ u_int8_t raspPi::startRunMode()
 
 
     //TODO make this smoother
-    if ((inputBuffer[2]==PI_STARTCALIBRATION_BYTE) && inputBufferLenght==5)
+    if ((inputBuffer[2]==PI_STARTRUNMODE_BYTE) && inputBufferLenght==5)
     {
         return 0;
     }
     
-    return 0x1c;
+    
 
-
-    return 0;
+    return 0x19;
     
 }
 
@@ -228,17 +227,79 @@ boolean raspPi::copyRxData2inputBuffer()
 
 int raspPi::sendSensorPaket2Pi(byte* sensorpaket, int lenghtSensorpaket)
 {
-    //TODO ALL !!!!
-    return -1;
+    
+    //copy sensorvalues to outputbuffer
+    // startbyte, lenght ,SENSOR_PAKET,endbyte,crc
+
+    uint8_t crc = 0;
+
+    outputBuffer[0] = PI_START_BYTE;
+    outputBuffer[1] = lenghtSensorpaket + 4;
+    outputBuffer[2] = PI_SENSOR_PAKET_BYTE;
+
+    for (size_t i = 0; i < lenghtSensorpaket; i++) 
+    {
+        outputBuffer[2+i+1]=sensorpaket[i];
+    }
+
+    // calculate crc byte
+
+    for (int i = 0; i < (lenghtSensorpaket + 4); i++) 
+    {
+    crc ^= outputBuffer[i];  // XOR with data byte
+    }
+
+    sendData2Pi(outputBuffer,(lenghtSensorpaket + 4));
+
+    return 0;
+
+
 }
 
 
 u_int16_t* raspPi::getThrustPaketfromPi()
 {
+    //lenght of a Thrustpaket is 
+    // start + end + lenght + crc + PI_THRUST_PAKET_BYTE + 2*4 thrustvalues
 
-// TODO ALL !!!!!
+    // expect the following order m1-highbyte, m1-lowbyte, m2-highbyte, m2-lowbyte, ........  
+
+
+    int ThrustPaketLenght = 13;
+    int rc = getDatafromPi2inputBuffer();
+
+    if (rc!=0)
+    {
+        return nullptr;
+    }
+
+
+    if (!((inputBuffer[2]==PI_THRUST_PAKET_BYTE) && inputBufferLenght==ThrustPaketLenght))
+    {
+       return nullptr;
+    }
+
+
+    thrustValues[0]=inputBuffer[3];
+    thrustValues[0]=thrustValues[0]<<8;
+    thrustValues[0] = thrustValues[0] & inputBuffer[4];
+
+    thrustValues[1]=inputBuffer[5];
+    thrustValues[1]=thrustValues[0]<<8;
+    thrustValues[1] = thrustValues[0] & inputBuffer[6];
+
+    thrustValues[2]=inputBuffer[7];
+    thrustValues[2]=thrustValues[0]<<8;
+    thrustValues[2] = thrustValues[0] & inputBuffer[8];
+
+    thrustValues[3]=inputBuffer[9];
+    thrustValues[3]=thrustValues[0]<<8;
+    thrustValues[3] = thrustValues[0] & inputBuffer[10];
+    
+
 
     return this->thrustValues;
+
 
 
 }
