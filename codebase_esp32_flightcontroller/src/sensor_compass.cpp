@@ -59,12 +59,12 @@
         Wire.endTransmission();
         Wire.requestFrom(i2c_address, length);     
 
-        dataBuffer[0] = Wire.read();
-        dataBuffer[1] = Wire.read();
-        dataBuffer[2] = Wire.read();
-        dataBuffer[3] = Wire.read();
-        dataBuffer[4] = Wire.read();
-        dataBuffer[5] = Wire.read();          
+        dataBuffer[0] = Wire.read();                        //Data Output X MSB Register 
+        dataBuffer[1] = Wire.read();                        //Data Output X LSB Register 
+        dataBuffer[2] = Wire.read();                        //Data Output Z MSB Register
+        dataBuffer[3] = Wire.read();                        //Data Output Z LSB Register 
+        dataBuffer[4] = Wire.read();                        //Data Output Y MSB Register 
+        dataBuffer[5] = Wire.read();                        //Data Output Y LSB Register
 
         return 0;
 
