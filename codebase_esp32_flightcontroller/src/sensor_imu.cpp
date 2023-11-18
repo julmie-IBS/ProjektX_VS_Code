@@ -1,6 +1,7 @@
 #include "sensor_imu.h"
 
-
+//https://wolles-elektronikkiste.de/mpu6050-beschleunigungssensor-und-gyroskop
+//https://cdn.sparkfun.com/datasheets/Sensors/Accelerometers/RM-MPU-6000A.pdf
     
     // constructor call
     IMU::IMU(int i2c_adress)
@@ -16,6 +17,17 @@
         Wire.write(0x6B); // PWR_MGMT_1 register
         Wire.write(0); // wake up!
         Wire.endTransmission(true);
+
+        delay(100);
+        setAccRange();
+        delay(100);
+        setGyrRange();
+        delay(100);
+        setLowPassFilter();
+
+
+
+
         return 0;
 
     }
@@ -24,6 +36,37 @@
     {
         return 0;
     }
+
+
+
+    void IMU::setAccRange()
+    {
+        Wire.beginTransmission(i2c_address);
+        Wire.write(MPU6050_ACCEL_CONFIG); 
+        Wire.write(m_accRange); 
+        Wire.endTransmission(true);
+    }
+
+    void IMU::setGyrRange()
+    {
+        Wire.beginTransmission(i2c_address);
+        Wire.write(MPU6050_GYRO_CONFIG); 
+        Wire.write(m_gyroRange); 
+        Wire.endTransmission(true);
+    }
+
+
+    void IMU::setLowPassFilter()
+    {
+        Wire.beginTransmission(i2c_address);
+        Wire.write(MPU6050_LOWPASS_CONFIG); 
+        Wire.write(m_lowpassfilter); 
+        Wire.endTransmission(true);
+    }
+
+
+
+
 
     
     int IMU::fetchData()
