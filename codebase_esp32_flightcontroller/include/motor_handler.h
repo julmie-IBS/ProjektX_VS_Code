@@ -6,9 +6,9 @@
 
 
 
-#define WAIT_CONSTANT_ONE   57
-#define WAIT_CONSTANT_TWO   55
-#define WAIT_CONSTANT_THREE 45
+#define WAIT_CONSTANT_ONE   54
+#define WAIT_CONSTANT_TWO   56                  //57
+#define WAIT_CONSTANT_THREE 44                  //43
 
 #define GPIO_MOT_ONE         32
 #define CLR_MOT_ONE         GPIO.out1_w1tc.val |= 1 //Pin32 2^(32-32)
@@ -32,7 +32,7 @@ class motorhandler  {
 public:
 
     motorhandler();
-    void writeToMotors(uint16_t* throttle);
+    void writeToMotors(volatile uint16_t* throttle);
     
     // min max check
  
@@ -41,6 +41,12 @@ private:
     void WAIT_2();
     void WAIT_3();
     uint16_t createPacket(uint16_t throttlee);
+
+    //save last throttle values 
+    int m_last_throttles_M1;
+    int m_last_throttles_M2;
+    int m_last_throttles_M3;
+    int m_last_throttles_M4;
    
     
     

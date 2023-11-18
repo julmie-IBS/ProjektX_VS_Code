@@ -10,6 +10,10 @@ motorhandler::motorhandler()
     pinMode(GPIO_MOT_TWO,OUTPUT);
     pinMode(GPIO_MOT_THREE,OUTPUT);
     pinMode(GPIO_MOT_FOUR,OUTPUT);
+    CLR_MOT_ONE;
+    CLR_MOT_TWO; 
+    CLR_MOT_THREE; 
+    CLR_MOT_FOUR;    
 }
 
 
@@ -20,8 +24,7 @@ void motorhandler::WAIT_1()
    //2.5 us
    for(int ii=0;ii<WAIT_CONSTANT_ONE;ii++)
    {
-      asm("nop\n\t");
-      asm("nop\n\t");
+     
       asm("nop\n\t");
       asm("nop\n\t");
       asm("nop\n\t");
@@ -32,8 +35,7 @@ void motorhandler::WAIT_2()
    //2.5 us
    for(int ii=0;ii<WAIT_CONSTANT_TWO;ii++)
    {
-      asm("nop\n\t");
-      asm("nop\n\t");
+      
       asm("nop\n\t");
       asm("nop\n\t");
       asm("nop\n\t");
@@ -44,8 +46,7 @@ void motorhandler::WAIT_3()
    //1.67 us
    for(int ii=0;ii<WAIT_CONSTANT_THREE;ii++)
    {
-      asm("nop\n\t");
-      asm("nop\n\t");
+      
       asm("nop\n\t");
       asm("nop\n\t");
       asm("nop\n\t");
@@ -68,7 +69,7 @@ uint16_t motorhandler::createPacket(uint16_t throttlee)
 
 
 
-void motorhandler::writeToMotors(uint16_t* throttle)
+void motorhandler::writeToMotors(volatile uint16_t* throttle)
 {
     uint16_t SendStream1=createPacket(throttle[0]);
     uint16_t SendStream2=createPacket(throttle[1]);
@@ -87,11 +88,50 @@ void motorhandler::writeToMotors(uint16_t* throttle)
     SET_MOT_FOUR;
     
     WAIT_1(); //2.5us, mark for zeros to go down
+
     
-    if ((SendStream1 & testArray[i]) == 0)  CLR_MOT_ONE;    //else _asm_("nop\n\t");
-    if ((SendStream2 & testArray[i]) == 0)  CLR_MOT_TWO;    //else _asm_("nop\n\t");
-    if ((SendStream3 & testArray[i]) == 0)  CLR_MOT_THREE;  //else _asm_("nop\n\t");
-    if ((SendStream4 & testArray[i]) == 0)  CLR_MOT_FOUR;   //else _asm_("nop\n\t");
+    
+    if ((SendStream1 & testArray[i]) == 0)  
+    {
+        CLR_MOT_ONE; 
+    }
+    else
+    {
+        SET_MOT_ONE;
+    }
+
+
+
+    if ((SendStream2 & testArray[i]) == 0)  
+    {
+        CLR_MOT_TWO; 
+    }   
+    else
+    {
+        SET_MOT_TWO; 
+    }
+
+
+    if ((SendStream3 & testArray[i]) == 0)  
+    {
+        CLR_MOT_THREE;  
+    }
+    else
+    {
+        SET_MOT_THREE;
+    }
+
+
+    if ((SendStream4 & testArray[i]) == 0) 
+    {
+        CLR_MOT_FOUR; 
+    }
+    else
+    {
+        SET_MOT_FOUR;
+    }
+
+
 
     WAIT_2(); //2.5us //mark for ones to go down
     CLR_MOT_ONE;
