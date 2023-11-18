@@ -133,7 +133,6 @@ int raspPi::getDatafromPi2inputBuffer()
 
     if (checkTransmissionFinished())
     {
-
         return 0x16;
     }
 
@@ -236,7 +235,7 @@ int raspPi::sendSensorPaket2Pi(byte* sensorpaket, int lenghtSensorpaket)
     // HEADER OF PAKET
     uint8_t crc = 0;
     outputBuffer[0] = PI_START_BYTE;
-    outputBuffer[1] = lenghtSensorpaket + 4;
+    outputBuffer[1] = lenghtSensorpaket + 5;
     outputBuffer[2] = PI_SENSOR_PAKET_BYTE;
     //crc ^=outputBuffer[0];
     //crc ^=outputBuffer[1];
@@ -259,10 +258,10 @@ int raspPi::sendSensorPaket2Pi(byte* sensorpaket, int lenghtSensorpaket)
 
 
     //END OF PAKET
-    outputBuffer[lenghtSensorpaket+2] = crc;
-    outputBuffer[lenghtSensorpaket+3] = PI_END_BYTE;
+    outputBuffer[lenghtSensorpaket+3] = crc;
+    outputBuffer[lenghtSensorpaket+4] = PI_END_BYTE;
 
-    sendData2Pi(outputBuffer,(lenghtSensorpaket + 4));
+    sendData2Pi(outputBuffer,(lenghtSensorpaket + 5));
 
     return 0;
 
