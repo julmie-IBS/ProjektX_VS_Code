@@ -23,8 +23,8 @@ u_int8_t raspPi::init()
     
 
     //this is a test start sequeunz
-    //TODO CRC
-    byte byteArray[5] = {PI_START_BYTE, 0x05 ,PI_INIT_CONN_BYTE, 0xFF , PI_END_BYTE};
+    // CRC  Hardcoded
+    byte byteArray[5] = {PI_START_BYTE, 0x05 ,PI_INIT_CONN_BYTE, 0xAE , PI_END_BYTE};
 
     // try 100 secounds to connect to pi
     for (int i = 0; i<100; i++ ){
@@ -58,7 +58,7 @@ u_int8_t raspPi::init()
 
 u_int8_t raspPi::startCalibration()
 {
-    byte CalibrationSequenz[5] = {PI_START_BYTE, 0x05,PI_STARTCALIBRATION_BYTE, 0xFF, PI_END_BYTE};
+    byte CalibrationSequenz[5] = {PI_START_BYTE, 0x05,PI_STARTCALIBRATION_BYTE, 0xAD, PI_END_BYTE};
     this->sendData2Pi(CalibrationSequenz,sizeof(CalibrationSequenz));
     SERIAL_PI.flush();
     
@@ -251,7 +251,7 @@ int raspPi::sendSensorPaket2Pi(byte* sensorpaket, int lenghtSensorpaket)
 
     // calculate crc byte    +2 to exclude crc and endbyte
 
-    for (int i = 0; i < (lenghtSensorpaket + 2); i++) 
+    for (int i = 0; i < (lenghtSensorpaket + 3); i++)                     // FIX +2  -> +3
     {
     crc ^= outputBuffer[i];  // XOR with data byte
     }
@@ -291,7 +291,7 @@ int raspPi::getThrustPaketfromPi()
        return rc;
     }
 
-
+    ///////////////////////////////////////////  TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!
     thrustValues[0]=inputBuffer[3];
     thrustValues[0]=thrustValues[0]<<8;
     thrustValues[0] = thrustValues[0] & inputBuffer[4];
