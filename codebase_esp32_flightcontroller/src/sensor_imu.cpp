@@ -13,6 +13,7 @@
     u_int16_t IMU::initSensor() 
     {
         Wire.begin();
+        Wire.setClock(400000);              //set i2c speed to 400kHz
         Wire.beginTransmission(this->i2c_address);
         Wire.write(0x6B); // PWR_MGMT_1 register
         Wire.write(0); // wake up!

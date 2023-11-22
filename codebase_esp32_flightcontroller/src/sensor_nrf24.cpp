@@ -30,13 +30,13 @@ int Nrf24::triggerMeasurement()
 
 int Nrf24::fetchData()
 {
-
+    
     if (m_radio.available()) 
         {
             m_radio.read(m_dataBuffer, 5);
         }     
-        return 0;
-
+    return 0;
+    
 }
 
 
