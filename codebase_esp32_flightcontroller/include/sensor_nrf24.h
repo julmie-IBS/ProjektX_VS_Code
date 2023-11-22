@@ -1,10 +1,10 @@
-#ifndef Sensor_Compass_h
-#define Sensor_Compass_h
+#ifndef Sensor_Nrf24_h
+#define Sensor_Nrf24_h
 
 #include "sensor_interface.h"
-#include <Wire.h>
 #include "arduino.h"
-
+#include <RF24.h>
+#include <nRF24L01.h>
 
 
 #define CONFIGURATION_REGISTER_A 0x00
@@ -16,10 +16,9 @@
 
 
 
-class Compass : public ISensor {
+class Nrf24 : public ISensor {
 public:
-    Compass(int i2c_address);
-
+    Nrf24();
     u_int16_t initSensor() override;
     int triggerMeasurement() override;
     int fetchData() override;
@@ -27,13 +26,12 @@ public:
     int getLength() override;
 
 private:
-    int i2c_address;
-    int length = 6;
-    byte dataBuffer[6];
 
-    byte identification_reg_a;
-    byte identification_reg_b;
-    byte identification_reg_c;
+    RF24 m_radio ;
+    int m_length = 5;
+    byte m_dataBuffer[5];
+    
+    
 
 
 };

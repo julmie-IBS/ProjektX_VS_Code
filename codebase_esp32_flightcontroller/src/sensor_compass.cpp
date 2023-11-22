@@ -4,31 +4,29 @@
 // todo
 // i2c maybe wrong (0x3C >> 1) ????????
 
-class compass : ISensor 
 
-{
-  public:
+
     
     // constructor call
-    compass(int i2c_adress)
+    Compass::Compass(int i2c_adress)
     {
-        this->i2c_adress = i2c_adress;
+        this->i2c_address = i2c_adress;
     }
 
     
-    u_int16_t initSensor() override 
+    u_int16_t Compass::initSensor() 
     {
         //HMC5883L_3-Axis_Digital_Compass_IC.pdf
         Wire.begin();
         delay(10);
 
         // Initialize communication with the HMC5883L
-        Wire.beginTransmission(i2c_adress);
+        Wire.beginTransmission(i2c_address);
         Wire.write(IDENTIFICATION_REGISTER_A); // Set adresspointer on sensor to identification register (A)
         Wire.endTransmission();
 
         // Request 3 bytes of data
-        Wire.requestFrom(i2c_adress, 3);
+        Wire.requestFrom(i2c_address, 3);
 
 
         byte identification_reg_a = Wire.read(); 
@@ -39,58 +37,49 @@ class compass : ISensor
 
         //TODO    Set config register  may not nessesary 
 
+        return 0;
+
     }
     
-    int triggerMeasurement() override
+    int Compass::triggerMeasurement()
     {
-        Wire.beginTransmission(i2c_adress);              //Init Transmition with 0x2c device
+        Wire.beginTransmission(i2c_address);              //Init Transmition with 0x2c device
         Wire.write(MODE_REGISTER);                       //Set Register to be written
         Wire.write(SINGLE_MEASUREMENT_MODE);             //Set Register Value
         Wire.endTransmission();
+
+        return 0;
     }
 
     
-    int fetchData() override
+    int Compass::fetchData()
     {
-        Wire.beginTransmission(i2c_adress);                 //Init Transmition with 0x2c device
+        Wire.beginTransmission(i2c_address);                 //Init Transmition with 0x2c device
         Wire.write(DATA_OUTPUT_X_MSB_REGISTER);             //Set Adresspointer to first data register
         Wire.endTransmission();
-        Wire.requestFrom(i2c_adress, lenght);     
+        Wire.requestFrom(i2c_address, length);     
 
-        databuffer[0] = Wire.read();
-        databuffer[1] = Wire.read();
-        databuffer[2] = Wire.read();
-        databuffer[3] = Wire.read();
-        databuffer[4] = Wire.read();
-        databuffer[5] = Wire.read();          
+        dataBuffer[0] = Wire.read();                        //Data Output X MSB Register 
+        dataBuffer[1] = Wire.read();                        //Data Output X LSB Register 
+        dataBuffer[2] = Wire.read();                        //Data Output Z MSB Register
+        dataBuffer[3] = Wire.read();                        //Data Output Z LSB Register 
+        dataBuffer[4] = Wire.read();                        //Data Output Y MSB Register 
+        dataBuffer[5] = Wire.read();                        //Data Output Y LSB Register
 
+        return 0;
 
 
     }
 
     
-    byte* getData() override
+    byte* Compass::getData()
     {
-        return databuffer;
+        return dataBuffer;
     }
 
     
-    int getLength() override
+    int Compass::getLength()
     {
-        return this->lenght;
+        return this->length;
     }
-
-  private:
-
-    int i2c_adress;
-    int lenght = 6;
-    byte databuffer[6];
-
-    byte identification_reg_a;
-    byte identification_reg_b;
-    byte identification_reg_c;
-
-
-
-};
 

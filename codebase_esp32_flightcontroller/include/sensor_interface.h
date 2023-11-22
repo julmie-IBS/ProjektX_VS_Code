@@ -19,7 +19,7 @@ class ISensor
     // instructs the sensor to start a measurement
     virtual int triggerMeasurement() = 0;
 
-    // fetch and store the data block into the object
+    // fetch and store the data block into the memberobject buffer
     virtual int fetchData() = 0;
 
     // returns a byte pointer pointing at the beginning of the data block.
