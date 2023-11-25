@@ -30,27 +30,57 @@
 #define MPU6050_LOWPASS_FILTER_184Hz    1
 #define MPU6050_LOWPASS_FILTER_94Hz     2
 #define MPU6050_LOWPASS_FILTER_44Hz     3
-#define MPU6050_LOWPASS_FILTER_21Hz     4
+#define MPU6050_LOWPASS_FILTER_21Hz     4 
 #define MPU6050_LOWPASS_FILTER_10Hz     5
 #define MPU6050_LOWPASS_FILTER_5Hz      6
 
 
 
 
+
+
+
+
+
 class IMU : public ISensor {
 public:
-    IMU(int i2c_address);
+    IMU(int i2c_address, float calAccXBias, float calAccYBias, float calAccZBias, float calAccXScale, float calAccYScale, float calAccZScale);
 
     u_int16_t initSensor() override;
     int triggerMeasurement() override;
     int fetchData() override;
     byte* getData() override;
     int getLength() override;
+    
+    float m_imuAccX;
+    float m_imuAccY;
+    float m_imuAccZ;
+    float m_imuGyroX;
+    float m_imuGyroY;
+    float m_imuGyroZ;
+    float m_imuTemp;
+
+    float m_calAccXBias;
+    float m_calAccYBias;
+    float m_calAccZBias;
+    float m_calAccXScale;
+    float m_calAccYScale;
+    float m_calAccZScale;
+
+    float m_calGyroXBias=0;
+    float m_calGyroYBias=0;
+    float m_calGyroZBias=0;
+
+
+
+
 
 private:
     void setAccRange();
     void setGyrRange();
     void setLowPassFilter();
+    void measureGyroBias();
+    void calibrateValues();
     int m_accRange = MPU6050_ACC_RANGE_2G;
     int m_gyroRange = MPU6050_GYR_RANGE_250;
     int m_lowpassfilter = MPU6050_LOWPASS_FILTER_44Hz;
@@ -66,3 +96,4 @@ private:
 
 
 #endif
+
