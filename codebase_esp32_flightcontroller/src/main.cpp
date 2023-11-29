@@ -17,8 +17,8 @@ void loop() {
 
   motorhandler motorhandler_1 = motorhandler();
   raspPi raspberry = raspPi();
-  IMU IMU_1 = IMU(0x68);
-  IMU IMU_2 = IMU(0x69);
+  IMU IMU_1 = IMU(0x68,0.03883,-0.0181,-0.0436,1.002,1.008,1.014);
+  IMU IMU_2 = IMU(0x69,0.03166,-0.0321,0.1343,0.9953,0.994,1.016);
   //Compass Compass_1 = Compass(0x69);
   Nrf24 Nrf24_1 = Nrf24();
   Nrf24_1.initSensor();
@@ -74,7 +74,7 @@ if ((count > 10000))
 }
 
 
-if ((count > 35000)) {while(1){}}
+//if ((count > 35000)) {while(1){}}
 
 if ((count > 36000)) 
 {
@@ -87,39 +87,89 @@ if ((count > 36000))
 
 
 
+    ////// TEST ACC //////
 
 /*
-  Serial.print("IMU1z,");
-
+Serial.print("IMU1z,");
 Serial.print(IMU_1.m_imuAccZ);
 Serial.print(",");
- Serial.print("IMU2z,");
-
+Serial.print("IMU2z,");
 Serial.print(IMU_2.m_imuAccZ);
 Serial.print(",");
-
-
- Serial.print("IMU1y,");
-
+Serial.print("IMU1y,");
 Serial.print(IMU_1.m_imuAccY);
 Serial.print(",");
- Serial.print("IMU2y,");
-
+Serial.print("IMU2y,");
 Serial.print(IMU_2.m_imuAccY);
 Serial.print(",");
-
-
- Serial.print("IMU1x,");
-
+Serial.print("IMU1x,");
 Serial.print(IMU_1.m_imuAccX);
 Serial.print(",");
- Serial.print("IMU2x,");
-
+Serial.print("IMU2x,");
 Serial.print(IMU_2.m_imuAccX);
+Serial.println(",");
+*/
+
+
+/// GYRO ////    
+
+/*
+Serial.print("IMU1x,");                     // X -> Roll Bodyframe
+Serial.print(IMU_1.m_imuGyroX);
+Serial.print(",");
+Serial.print("IMU2x,");
+Serial.print(IMU_2.m_imuGyroX);
+
+
+Serial.print(",");                          // Y -> Pitch Bodyframe
+Serial.print("IMU1y,");
+Serial.print(IMU_1.m_imuGyroY);
+Serial.print(",");
+Serial.print("IMU2y,");
+Serial.print(IMU_2.m_imuGyroY);
+
+
+Serial.print(",");
+
+
+Serial.print("IMU1x,");
+Serial.print(IMU_1.m_imuGyroZ);
+Serial.print(",");
+Serial.print("IMU2x,");
+Serial.print(IMU_2.m_imuGyroZ);
+Serial.println(",");
+
+*/
+
+
+
+
+
+///////////////
+
+
+
+
+
+
+Serial.print("roll,");
+
+Serial.print(CompFilter_1.getRollHatDeg());
+Serial.print(",");
+Serial.print("pitch,");
+
+Serial.print(CompFilter_1.getPitchHatDeg());
 Serial.println(",");
 
 
-*/
+
+
+
+
+
+///////////////
+
+/*
 
 motorhandler_1.writeToMotors(throttle_array);
 
@@ -133,9 +183,9 @@ Serial.print("pitch,");
 Serial.print(CompFilter_1.getPitchHat());
 Serial.println(",");
 
+*/
 
-
-delay(1);
+delay(5);
 
 count++;
 
