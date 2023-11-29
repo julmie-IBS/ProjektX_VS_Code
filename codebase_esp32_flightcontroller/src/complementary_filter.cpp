@@ -36,15 +36,21 @@
         return this->pitchHat;
     }
 
-
+    float CompFilter::getUseAcc()
+    {
+        return this->m_useAcc;
+    }
 
 
 
     
     
-    void CompFilter::calculateValues()
+    void CompFilter::calculateValues(float biasAccRoll, float biasAccPitch)
     {
       
+        m_useAcc = 1;
+
+
         /////////////////////////////  ACCELEROMETER  //////////////////////////////
 
         float AccX_IMU1 = this->m_IMU_1->m_imuAccX;
@@ -53,11 +59,43 @@
         float AccY_IMU2 = this->m_IMU_2->m_imuAccY;
         float AccZ_IMU1 = this->m_IMU_1->m_imuAccZ;
         float AccZ_IMU2 = this->m_IMU_2->m_imuAccZ;
-        float Acc_Roll_IMU1 = atanf(AccY_IMU1/AccZ_IMU1);          
-        float Acc_Roll_IMU2 = atanf(AccY_IMU2/AccZ_IMU2);          
-        float Acc_Pitch_IMU1 = -asinf(AccX_IMU1/1);          
-        float Acc_Pitch_IMU2 = -asinf(AccX_IMU2/1);          
-        //TODO Check why -asinf ???????  YT  6:06
+
+
+        float totalForce_IMU1=     AccX_IMU1*AccX_IMU1    +     AccY_IMU1*AccY_IMU1   +    AccZ_IMU1*AccZ_IMU1;
+        float totalForce_IMU2=     AccX_IMU2*AccX_IMU2    +     AccY_IMU2*AccY_IMU2   +    AccZ_IMU2*AccZ_IMU2;
+
+        float Acc_Roll_IMU1 = 0;          
+        float Acc_Roll_IMU2 = 0;          
+        float Acc_Pitch_IMU1 = 0;                 
+        float Acc_Pitch_IMU2 = 0; 
+
+
+        if ((totalForce_IMU1<0.90)||(totalForce_IMU1>1.1)||(totalForce_IMU2<0.90)||(totalForce_IMU2>1.1))
+        {
+            m_useAcc=0;
+        }
+
+        if (((AccX_IMU1/1)>0.99)||((AccX_IMU1/1)<-0.99))
+        {
+            m_useAcc=0;
+        }
+
+
+
+        if(m_useAcc)
+        {
+            Acc_Roll_IMU1 = atanf(AccY_IMU1/AccZ_IMU1) - biasAccRoll;          
+            Acc_Roll_IMU2 = atanf(AccY_IMU2/AccZ_IMU2) - biasAccRoll;          
+            Acc_Pitch_IMU1 = -asinf(AccX_IMU1/1) - biasAccPitch;                 //TODO Check why -asinf ???????  YT  6:06
+            Acc_Pitch_IMU2 = -asinf(AccX_IMU2/1) - biasAccPitch;                 //TODO Check why -asinf ???????  YT  6:06
+        }     
+        
+
+
+
+
+
+        
 
 
 
@@ -72,8 +110,8 @@
         float pitchHatRefFrame_imu1_rps =                                                    cosf(rollHatLastCycle) * imuGyroY_Pitch_imu1_rps - sinf(rollHatLastCycle) * imuGyroZ_Yaw_imu1_rps;
         // Integrate 
        
-        float rollHatRefFrame_imu1_rad = rollHatLastCycle + rollHatRefFrame_imu1_rps * SAMPLETIME;
-        float pitchHatRefFrame_imu1_rad = pitchHatLastCycle + pitchHatRefFrame_imu1_rps * SAMPLETIME;
+        float rollHatRefFrame_imu1_rad = rollHatLastCycle + rollHatRefFrame_imu1_rps * (SAMPLETIME+0.001);
+        float pitchHatRefFrame_imu1_rad = pitchHatLastCycle + pitchHatRefFrame_imu1_rps * (SAMPLETIME+0.001);
 
 
         ///////////////   IMU 2 /////////////////////////
@@ -87,8 +125,8 @@
 
 
         // Integrate 
-        float rollHatRefFrame_imu2_rad = rollHatLastCycle + rollHatRefFrame_imu2_rps * SAMPLETIME;
-        float pitchHatRefFrame_imu2_rad = pitchHatLastCycle + pitchHatRefFrame_imu2_rps * SAMPLETIME;
+        float rollHatRefFrame_imu2_rad = rollHatLastCycle + rollHatRefFrame_imu2_rps * (SAMPLETIME+0.001);
+        float pitchHatRefFrame_imu2_rad = pitchHatLastCycle + pitchHatRefFrame_imu2_rps * (SAMPLETIME+0.001);
 
 
 
@@ -96,8 +134,17 @@
         //Complementary Filter
 
         
-        rollHat  =   0.49 * rollHatRefFrame_imu1_rad + 0.49 * rollHatRefFrame_imu2_rad  +  Acc_Roll_IMU1 * 0.01 + Acc_Roll_IMU2 * 0.01;
-        pitchHat =   0.49 * pitchHatRefFrame_imu1_rad + 0.49 * pitchHatRefFrame_imu2_rad +  Acc_Pitch_IMU1 * 0.01 + Acc_Pitch_IMU2 *0.01;
+        if(m_useAcc)
+        {
+            rollHat  =   0.48 * rollHatRefFrame_imu1_rad + 0.48 * rollHatRefFrame_imu2_rad  +  Acc_Roll_IMU1 * 0.02 + Acc_Roll_IMU2 * 0.02;
+            pitchHat =   0.48 * pitchHatRefFrame_imu1_rad + 0.48 * pitchHatRefFrame_imu2_rad +  Acc_Pitch_IMU1 * 0.02 + Acc_Pitch_IMU2 *0.02;
+        }
+        else
+        {
+            rollHat  =   0.5 * rollHatRefFrame_imu1_rad + 0.5 * rollHatRefFrame_imu2_rad;
+            pitchHat =   0.5 * pitchHatRefFrame_imu1_rad + 0.5 * pitchHatRefFrame_imu2_rad;
+        }
+
         rollHatLastCycle = rollHat;
         pitchHatLastCycle = pitchHat;
         

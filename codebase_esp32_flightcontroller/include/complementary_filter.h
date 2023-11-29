@@ -10,11 +10,12 @@
 class CompFilter {
 public:
     CompFilter(IMU* IMU_1, IMU* IMU_2);  // Deklaration des Konstruktors
-    void calculateValues();
+    void calculateValues(float biasAccRoll, float biasAccPitch);            // Zusätzliche Kalibrierung
     float getRollHatDeg();  
     float getPitchHatDeg();
     float getRollHatRad();  
     float getPitchHatRad();
+    float getUseAcc();
 
 
 
@@ -27,17 +28,17 @@ private:
 
     float pitchHatLastCycle=0;
     float rollHatLastCycle=0;
+    int m_useAcc;
 
 
-
+    /*
     float Acc_Roll_IMU1;         
     float Acc_Roll_IMU2;         
     float Acc_Pitch_IMU1;        
-    float Acc_Pitch_IMU2;        
+    float Acc_Pitch_IMU2;     
+    */   
 
 
-    int16_t calculateAccRoll();
-    int16_t calculateAccPitch();
 
 };
 
