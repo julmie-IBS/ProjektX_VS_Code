@@ -4,6 +4,7 @@
 
 
 
+
 motorhandler::motorhandler()
 {
     pinMode(GPIO_MOT_ONE,OUTPUT);   //32 33 26 27
@@ -147,3 +148,53 @@ void motorhandler::writeToMotors(volatile uint16_t* throttle)
 }
 
 
+
+void motorhandler::writeToMotorsSave(volatile uint16_t* throttle)
+{
+
+    if(m_isArmed)
+    {
+        //////////COPY VALUES TO BUFFER///////////////
+        volatile uint16_t tempthrottle[4]= {0,0,0,0};
+
+        for (int numberMotor = 0; numberMotor<4; numberMotor++)
+        {
+            tempthrottle[numberMotor]=throttle[numberMotor];
+
+            /// CHECK MAXIMAL AND MINIMAL MOTOR VALUE
+            /// TODO CHECK DIFF TO LAST VALUE SENT
+            if (tempthrottle[numberMotor] > MAXIMAL_MOTOR_VALUE) {tempthrottle[numberMotor] = MAXIMAL_MOTOR_VALUE;}
+            if ((tempthrottle[numberMotor]>0) || (tempthrottle[numberMotor]<MINIMAL_MOTOR_VALUE)) {tempthrottle[numberMotor] = MINIMAL_MOTOR_VALUE;}
+
+        }
+        this->writeToMotors(tempthrottle);
+    }
+}
+
+
+
+void motorhandler::armMotors()
+{
+    if (this->m_isArmed==0)
+    {
+
+    this->m_isArmed=1;
+    //arm sequence
+
+    for(int i = 0; i<2000; i++)
+    {   
+        volatile uint16_t tempthrottle[4]= {0,0,0,0};
+        this->writeToMotors(tempthrottle);
+        delayMicroseconds(1);
+    }
+
+    }
+
+
+}
+
+
+void motorhandler::disarmMotors()
+{
+    this->m_isArmed=0;
+}
