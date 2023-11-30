@@ -17,8 +17,8 @@ void loop() {
 
   motorhandler motorhandler_1 = motorhandler();
   raspPi raspberry = raspPi();
-  IMU IMU_1 = IMU(0x68,0.03883,-0.0181,-0.0436,1.002,1.008,1.014);
-  IMU IMU_2 = IMU(0x69,0.03166,-0.0321,0.1343,0.9953,0.994,1.016);
+  IMU IMU_1 = IMU(0x68,-0.041333333333333055 , -0.018166666666666498 , -0.04316666666666685 , 1.0013333333333332 , 1.0075000000000003 , 1.0148333333333335);
+  IMU IMU_2 = IMU(0x69,-0.02950000000000008 , -0.029333333333333322 , 0.14666666666666633 , 0.9921666666666669 , 0.9953333333333335 , 1.018333333333333);
   //Compass Compass_1 = Compass(0x69);
   Nrf24 Nrf24_1 = Nrf24();
   Nrf24_1.initSensor();
@@ -49,8 +49,7 @@ while(1)
   
   IMU_1.fetchData();
   IMU_2.fetchData();
-
-  CompFilter_1.calculateValues();
+  CompFilter_1.calculateValues(0.0035 , 0.0247);      // Bias Calibration for ACC Values  (AngleBaised) in RAD
 
   
 
@@ -68,9 +67,9 @@ if ((count > 10000))
 
 {
   throttle_array[0]=50 + (count/200);
-  throttle_array[1]=50+ (count/200);
-  throttle_array[2]=50+ (count/200);
-  throttle_array[3]=50+ (count/200);
+  throttle_array[1]=50 + (count/200);
+  throttle_array[2]=50 + (count/200);
+  throttle_array[3]=50 + (count/200);
 }
 
 
@@ -90,25 +89,29 @@ if ((count > 36000))
     ////// TEST ACC //////
 
 /*
+
 Serial.print("IMU1z,");
-Serial.print(IMU_1.m_imuAccZ);
+Serial.print(IMU_1.m_imuAccZ, 4);
 Serial.print(",");
 Serial.print("IMU2z,");
-Serial.print(IMU_2.m_imuAccZ);
+Serial.print(IMU_2.m_imuAccZ, 4);
 Serial.print(",");
 Serial.print("IMU1y,");
-Serial.print(IMU_1.m_imuAccY);
+Serial.print(IMU_1.m_imuAccY, 4);
 Serial.print(",");
 Serial.print("IMU2y,");
-Serial.print(IMU_2.m_imuAccY);
+Serial.print(IMU_2.m_imuAccY, 4);
 Serial.print(",");
 Serial.print("IMU1x,");
-Serial.print(IMU_1.m_imuAccX);
+Serial.print(IMU_1.m_imuAccX, 4);
 Serial.print(",");
 Serial.print("IMU2x,");
-Serial.print(IMU_2.m_imuAccX);
+Serial.print(IMU_2.m_imuAccX, 4);
 Serial.println(",");
+
 */
+
+
 
 
 /// GYRO ////    
@@ -148,12 +151,15 @@ Serial.println(",");
 ///////////////
 
 
+ //      COMP FILTER TESTING
 
+ 
 
-
+Serial.print("UseACC,");
+Serial.print(CompFilter_1.getUseAcc());
+Serial.print(",");
 
 Serial.print("roll,");
-
 Serial.print(CompFilter_1.getRollHatDeg());
 Serial.print(",");
 Serial.print("pitch,");
@@ -163,6 +169,10 @@ Serial.println(",");
 
 
 
+
+
+
+motorhandler_1.writeToMotorsSave(throttle_array);
 
 
 
@@ -185,7 +195,7 @@ Serial.println(",");
 
 */
 
-delay(5);
+//delay(0.01);
 
 count++;
 
