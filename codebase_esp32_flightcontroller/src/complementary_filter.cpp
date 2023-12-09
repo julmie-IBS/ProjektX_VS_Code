@@ -70,7 +70,7 @@
         float Acc_Pitch_IMU2 = 0; 
 
 
-        if ((totalForce_IMU1<0.90)||(totalForce_IMU1>1.1)||(totalForce_IMU2<0.90)||(totalForce_IMU2>1.1))
+        if ((totalForce_IMU1<0.80)||(totalForce_IMU1>1.2)||(totalForce_IMU2<0.80)||(totalForce_IMU2>1.2))
         {
             m_useAcc=0;
         }
@@ -110,8 +110,8 @@
         float pitchHatRefFrame_imu1_rps =                                                    cosf(rollHatLastCycle) * imuGyroY_Pitch_imu1_rps - sinf(rollHatLastCycle) * imuGyroZ_Yaw_imu1_rps;
         // Integrate 
        
-        float rollHatRefFrame_imu1_rad = rollHatLastCycle + rollHatRefFrame_imu1_rps * (SAMPLETIME);
-        float pitchHatRefFrame_imu1_rad = pitchHatLastCycle + pitchHatRefFrame_imu1_rps * (SAMPLETIME);
+        float rollHatRefFrame_imu1_rad = rollHatLastCycle + rollHatRefFrame_imu1_rps * (SAMPLETIME*3);
+        float pitchHatRefFrame_imu1_rad = pitchHatLastCycle + pitchHatRefFrame_imu1_rps * (SAMPLETIME*3);
 
 
         ///////////////   IMU 2 /////////////////////////
@@ -125,8 +125,8 @@
 
 
         // Integrate 
-        float rollHatRefFrame_imu2_rad = rollHatLastCycle + rollHatRefFrame_imu2_rps * (SAMPLETIME);
-        float pitchHatRefFrame_imu2_rad = pitchHatLastCycle + pitchHatRefFrame_imu2_rps * (SAMPLETIME);
+        float rollHatRefFrame_imu2_rad = rollHatLastCycle + rollHatRefFrame_imu2_rps * (SAMPLETIME*3);
+        float pitchHatRefFrame_imu2_rad = pitchHatLastCycle + pitchHatRefFrame_imu2_rps * (SAMPLETIME*3);
 
 
 
@@ -136,8 +136,8 @@
         
         if(m_useAcc)
         {
-            rollHat  =   0.48 * rollHatRefFrame_imu1_rad + 0.48 * rollHatRefFrame_imu2_rad  +  Acc_Roll_IMU1 * 0.02 + Acc_Roll_IMU2 * 0.02;
-            pitchHat =   0.48 * pitchHatRefFrame_imu1_rad + 0.48 * pitchHatRefFrame_imu2_rad +  Acc_Pitch_IMU1 * 0.02 + Acc_Pitch_IMU2 *0.02;
+            rollHat  =   GYRO_COMP_VALUE * rollHatRefFrame_imu1_rad + GYRO_COMP_VALUE * rollHatRefFrame_imu2_rad  +  Acc_Roll_IMU1 * ACC_COMP_VALUE + Acc_Roll_IMU2 * ACC_COMP_VALUE;
+            pitchHat =   GYRO_COMP_VALUE * pitchHatRefFrame_imu1_rad + GYRO_COMP_VALUE * pitchHatRefFrame_imu2_rad +  Acc_Pitch_IMU1 * ACC_COMP_VALUE + Acc_Pitch_IMU2 *ACC_COMP_VALUE;
         }
         else
         {

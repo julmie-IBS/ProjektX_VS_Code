@@ -5,7 +5,12 @@
 #include <sensor_imu.h>
 
 
-#define SAMPLETIME 0.0012
+#define SAMPLETIME 0.0018
+
+#define GYRO_COMP_VALUE 0.49
+#define ACC_COMP_VALUE 0.01
+
+
 
 class CompFilter {
 public:
