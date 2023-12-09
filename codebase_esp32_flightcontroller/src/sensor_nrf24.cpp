@@ -1,6 +1,7 @@
 #include "sensor_nrf24.h"
 
 
+
 Nrf24::Nrf24()
 {
 
@@ -34,6 +35,12 @@ int Nrf24::fetchData()
     if (m_radio.available()) 
         {
             m_radio.read(m_dataBuffer, 5);
+
+            m_PS3_lx=m_dataBuffer[0];
+            m_PS3_ly=m_dataBuffer[1];
+            m_PS3_rx=m_dataBuffer[2];
+            m_PS3_ry=m_dataBuffer[3];
+            m_PS3_buttons=m_dataBuffer[4];
         }     
     return 0;
     
@@ -51,3 +58,39 @@ int Nrf24::getLength()
     return this->m_length;
 }
 
+float Nrf24::getThrust()
+{
+   if(m_PS3_ly<6)
+        return 0.0;     
+   else 
+        return (m_PS3_ly-5)*(100.0/123.0); 
+}
+
+float Nrf24::getYaw()
+{
+   if(abs(m_PS3_lx)<6)
+        return 0.0;     
+   else
+   { if(m_PS3_lx>0) return (m_PS3_lx-5)*(100.0/123.0);
+     else           return (m_PS3_lx+5)*(100.0/123.0);
+   }       
+}
+float Nrf24::getRoll()
+{
+   if(abs(m_PS3_rx)<6)
+        return 0.0;     
+   else
+   { if(m_PS3_rx>0) return (m_PS3_rx-5)*(100.0/123.0);
+     else           return (m_PS3_rx+5)*(100.0/123.0);
+   }       
+}
+
+float Nrf24::getPitch()
+{
+   if(abs(m_PS3_ry)<6)
+        return 0.0;     
+   else
+   { if(m_PS3_ry>0) return (m_PS3_ry-5)*(100.0/123.0)*(-1.0);
+     else           return (m_PS3_ry+5)*(100.0/123.0)*(-1.0);
+   }       
+}
