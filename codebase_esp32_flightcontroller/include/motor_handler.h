@@ -33,6 +33,33 @@
 
 
 
+/*
+            .
+           / \    Front
+            |
+            |
+
+       M2       M1
+         \     /
+          X---X
+          X---X
+          X---X
+          X---X
+         /     \
+       M4       M3
+
+
+
+*/
+
+
+
+
+
+
+
+
+
 class motorhandler  {
 public:
 
@@ -50,7 +77,6 @@ private:
     void WAIT_2();
     void WAIT_3();
     uint16_t createPacket(uint16_t throttlee);
-
     //save last throttle values 
     int m_last_throttles_M1;
     int m_last_throttles_M2;

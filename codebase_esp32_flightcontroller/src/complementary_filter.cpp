@@ -110,8 +110,8 @@
         float pitchHatRefFrame_imu1_rps =                                                    cosf(rollHatLastCycle) * imuGyroY_Pitch_imu1_rps - sinf(rollHatLastCycle) * imuGyroZ_Yaw_imu1_rps;
         // Integrate 
        
-        float rollHatRefFrame_imu1_rad = rollHatLastCycle + rollHatRefFrame_imu1_rps * (SAMPLETIME*3);
-        float pitchHatRefFrame_imu1_rad = pitchHatLastCycle + pitchHatRefFrame_imu1_rps * (SAMPLETIME*3);
+        float rollHatRefFrame_imu1_rad = rollHatLastCycle + rollHatRefFrame_imu1_rps * (SAMPLETIME);
+        float pitchHatRefFrame_imu1_rad = pitchHatLastCycle + pitchHatRefFrame_imu1_rps * (SAMPLETIME);
 
 
         ///////////////   IMU 2 /////////////////////////
@@ -125,8 +125,8 @@
 
 
         // Integrate 
-        float rollHatRefFrame_imu2_rad = rollHatLastCycle + rollHatRefFrame_imu2_rps * (SAMPLETIME*3);
-        float pitchHatRefFrame_imu2_rad = pitchHatLastCycle + pitchHatRefFrame_imu2_rps * (SAMPLETIME*3);
+        float rollHatRefFrame_imu2_rad = rollHatLastCycle + rollHatRefFrame_imu2_rps * (SAMPLETIME);
+        float pitchHatRefFrame_imu2_rad = pitchHatLastCycle + pitchHatRefFrame_imu2_rps * (SAMPLETIME);
 
 
 
