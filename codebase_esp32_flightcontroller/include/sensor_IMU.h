@@ -35,6 +35,9 @@
 #define MPU6050_LOWPASS_FILTER_5Hz      6
 
 
+#define ACC_ALPHA_FILTER_RATE           0.1
+
+
 
 
 
@@ -52,9 +55,9 @@ public:
     byte* getData() override;
     int getLength() override;
     
-    float m_imuAccX;
-    float m_imuAccY;
-    float m_imuAccZ;
+    float m_imuAccX=0;
+    float m_imuAccY=0;
+    float m_imuAccZ=0;
     float m_imuGyroX;
     float m_imuGyroY;
     float m_imuGyroZ;
