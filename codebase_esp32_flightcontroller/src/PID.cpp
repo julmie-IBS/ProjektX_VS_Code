@@ -60,12 +60,22 @@ void PIDController::calculateValues()
     SP_nrf24_roll=SP_nrf24_roll/10;                         // -10° <-> 10°
     SP_nrf24_pitch=SP_nrf24_pitch/10;                       // -10° <-> 10°
     SP_nrf24_yaw = SP_nrf24_yaw;                            // -100  <->  100        
-    SP_nrf24_thrust=SP_nrf24_thrust;                        //   0  <->  100
+    SP_nrf24_thrust=SP_nrf24_thrust/6.66  + 10;             //   0  <->  100
 
 
     // GET COMP MEASUREMENT
     float MeasurePV_COMPFILTER_roll  = this->m_CompFilter_1->getRollHatDeg();         // expected Value -100  <->  100
     float MeasurePV_COMPFILTER_pitch = this->m_CompFilter_1->getPitchHatDeg();        // expected Value -100  <->  100
+
+
+    if (m_PIDisArmed ==0)
+    {
+        if ((abs(MeasurePV_COMPFILTER_roll) > 3)||(abs(MeasurePV_COMPFILTER_pitch) > 3))
+        {
+            armPID();
+        }
+
+    }
 
 
 
@@ -98,10 +108,10 @@ void PIDController::calculateValues()
     if (m_PIDisArmed == 0)
     {
 
-        M1 = SP_nrf24_thrust/6.66  + 10;
-        M2 = SP_nrf24_thrust/6.66  + 10;
-        M3 = SP_nrf24_thrust/6.66  + 10;
-        M4 = SP_nrf24_thrust/6.66  + 10;
+        M1 = SP_nrf24_thrust;
+        M2 = SP_nrf24_thrust;
+        M3 = SP_nrf24_thrust;
+        M4 = SP_nrf24_thrust;
 
     }
 
@@ -114,60 +124,39 @@ void PIDController::calculateValues()
         M4 = SP_nrf24_thrust/6.66  + 10  -  output_pitch  +  output_roll;
         */
 
-        M1 = SP_nrf24_thrust/6.66  + 10  +  output_pitch;                 
-        M2 = SP_nrf24_thrust/6.66  + 10  +  output_pitch  +  output_roll;
-        M3 = SP_nrf24_thrust/6.66  + 10;  
-        M4 = SP_nrf24_thrust/6.66  + 10                   +  output_roll;
+        M1 = SP_nrf24_thrust  +  output_pitch;                 
+        M2 = SP_nrf24_thrust  +  output_pitch  +  output_roll;
+        M3 = SP_nrf24_thrust;  
+        M4 = SP_nrf24_thrust                   +  output_roll;
 
     }
+
+    if (M1 > 100) {M1 = 100;}
+    if (M1< 0 ) {M1 = 0;}
+
+     if (M2 > 100) {M2 = 100;}
+    if (M2< 0 ) {M2 = 0;}
+
+    if (M3 > 100) {M3 = 100;}
+    if (M3< 0 ) {M3 = 0;}
+
+     if (M4 > 100) {M4 = 100;}
+    if (M4< 0 ) {M4 = 0;}
+
     
-
-
-
     
-/*
-            .
-           / \    Front
-            |
-            |
-
-       M2       M1
-         \     /
-          X---X
-          X---X
-          X---X
-          X---X
-         /     \
-       M4       M3
-*/
+    m_Motor_dshotValues[0]=m_motorhandler_1->getDshotLookup((int)M1*10);
+    m_Motor_dshotValues[1]=m_motorhandler_1->getDshotLookup((int)M2*10);
+    m_Motor_dshotValues[2]=m_motorhandler_1->getDshotLookup((int)M3*10);
+    m_Motor_dshotValues[3]=m_motorhandler_1->getDshotLookup((int)M4*10);
 
 
-        
 
 
 
 
        
 
-    /*
-
-        double error = setpoint - processVariable;
-        integral += error;
-        double derivative = error - prevError;
-
-        double output = kp * error + ki * integral + kd * derivative;
-
-        // Clamping the output within the specified range
-        
-
-        prevError = error;
-
-        // PITCH
-
-
-        // MOTORMIXING
-
-    */
 
         
     }

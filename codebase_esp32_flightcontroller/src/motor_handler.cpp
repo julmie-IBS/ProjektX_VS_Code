@@ -188,7 +188,7 @@ void motorhandler::armMotors()
 
     volatile uint16_t tempthrottle[4]= {0,0,0,0};
 
-    for(int i = 0; i<5000; i++)
+    for(int i = 0; i<1000; i++)
     {   
         
         writeToMotors(tempthrottle);
@@ -204,4 +204,11 @@ void motorhandler::armMotors()
 void motorhandler::disarmMotors()
 {
     this->m_isArmed=0;
+}
+
+int motorhandler::getDshotLookup(int ThrustValue)
+{
+    return m_LookupDshot[ThrustValue];
+
+
 }

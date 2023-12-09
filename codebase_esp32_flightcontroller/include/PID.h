@@ -17,6 +17,10 @@ public:
     void armPID();
     void disarmPID();
 
+    
+    uint16_t m_Motor_dshotValues [4] ={0,0,0,0};
+
+
 private:
 
     CompFilter* m_CompFilter_1;
@@ -26,7 +30,7 @@ private:
     int m_PIDisArmed=0;
 
     float m_roll_kp=0.01;
-    float m_roll_ki=0.01;
+    float m_roll_ki=0.01*SAMPLETIME;
     float m_roll_kd;
     float m_roll_prevError=0;
     float m_roll_integrationError=0;
@@ -34,7 +38,7 @@ private:
 
 
     float m_pitch_kp=0.01;
-    float m_pitch_ki=0.01;
+    float m_pitch_ki=0.01*SAMPLETIME;
     float m_pitch_kd;
     float m_pitch_prevError=0;
     float m_pitch_integrationError=0;

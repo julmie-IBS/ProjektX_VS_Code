@@ -41,6 +41,7 @@ int Nrf24::fetchData()
             m_PS3_rx=m_dataBuffer[2];
             m_PS3_ry=m_dataBuffer[3];
             m_PS3_buttons=m_dataBuffer[4];
+
         }     
     return 0;
     
@@ -60,10 +61,16 @@ int Nrf24::getLength()
 
 float Nrf24::getThrust()
 {
-   if(m_PS3_ly<6)
-        return 0.0;     
+   if(m_PS3_ly>-6)
+   {
+     return 0.0;   
+   }
+          
    else 
-        return (m_PS3_ly-5)*(100.0/123.0); 
+   {
+     return (m_PS3_ly+5)*(-100.0/123.0); 
+   }
+        
 }
 
 float Nrf24::getYaw()
@@ -90,7 +97,7 @@ float Nrf24::getPitch()
    if(abs(m_PS3_ry)<6)
         return 0.0;     
    else
-   { if(m_PS3_ry>0) return (m_PS3_ry-5)*(100.0/123.0)*(-1.0);
-     else           return (m_PS3_ry+5)*(100.0/123.0)*(-1.0);
+   { if(m_PS3_ry>0) return (m_PS3_ry-5)*(100.0/123.0);
+     else           return (m_PS3_ry+5)*(100.0/123.0);
    }       
 }
