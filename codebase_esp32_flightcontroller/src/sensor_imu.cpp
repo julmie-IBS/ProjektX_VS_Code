@@ -141,9 +141,15 @@
         //int16_t temp = (dataBuffer[4]<<8 | dataBuffer[5]);
 
         //save in member variables for calculation on esp32
-        m_imuAccX = -((float)((int16_t)((dataBuffer[0]<<8 | dataBuffer[1]))))/16384;            // "-" flip x axis to correct direction
-        m_imuAccY = ((float)((int16_t)((dataBuffer[2]<<8 | dataBuffer[3]))))/16384;
-        m_imuAccZ = ((float)((int16_t)((dataBuffer[4]<<8 | dataBuffer[5]))))/16384;
+        m_imuAccX = (-((float)((int16_t)((dataBuffer[0]<<8 | dataBuffer[1]))))/16384);            // "-" flip x axis to correct direction
+        m_imuAccY = (((float)((int16_t)((dataBuffer[2]<<8 | dataBuffer[3]))))/16384);  
+        m_imuAccZ = (((float)((int16_t)((dataBuffer[4]<<8 | dataBuffer[5]))))/16384);  
+
+
+        
+
+       
+
 
         m_imuTemp = (dataBuffer[6]<<8 | dataBuffer[7])/32768.0;
 

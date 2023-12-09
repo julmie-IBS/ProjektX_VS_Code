@@ -5,12 +5,17 @@
 #include <motor_handler.h>
 #include <complementary_filter.h>
 
+
 void setup() {}
 
 
 
 
 void loop() {
+
+  
+
+
 
   
   byte sensorarray[33]= {0, 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 , 9 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 , 18 , 19 , 20 , 21 , 22 , 23 , 24 , 25 , 26 , 27 , 28 , 29 , 30 , 31 , 32};
@@ -42,13 +47,21 @@ delay(2000);
 volatile uint16_t throttle_array[4]= {0,0,0,0};
 int count=0;
 
+//motorhandler_1.armMotors();
+
+
 
 while(1)
 {
 
+
+
   
   IMU_1.fetchData();
   IMU_2.fetchData();
+  Nrf24_1.fetchData();
+
+
   CompFilter_1.calculateValues(0.0035 , 0.0247);      // Bias Calibration for ACC Values  (AngleBaised) in RAD
 
   
@@ -63,19 +76,23 @@ throttle_array[1]=0;
 throttle_array[2]=0;
 throttle_array[3]=0;
 
-if ((count > 10000))
+if ((count > 5000))
 
 {
-  throttle_array[0]=50 + (count/200);
-  throttle_array[1]=50 + (count/200);
-  throttle_array[2]=50 + (count/200);
-  throttle_array[3]=50 + (count/200);
+  throttle_array[0]=     (count/50);
+  throttle_array[1]=    (count/50);
+  throttle_array[2]=    (count/50);
+  throttle_array[3]=     (count/50);
 }
 
+if ((count > 15000)) 
+{
+  motorhandler_1.disarmMotors();
+}
 
-//if ((count > 35000)) {while(1){}}
+if ((count > 15200)) {while(1){}}
 
-if ((count > 36000)) 
+if ((count > 26000)) 
 {
   throttle_array[0]=0;
   throttle_array[1]=0;
@@ -172,6 +189,8 @@ Serial.println(",");
 
 
 
+
+
 motorhandler_1.writeToMotorsSave(throttle_array);
 
 
@@ -200,20 +219,6 @@ Serial.println(",");
 count++;
 
 }
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
 
 
 

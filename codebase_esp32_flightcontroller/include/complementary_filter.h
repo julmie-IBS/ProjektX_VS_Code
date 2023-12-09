@@ -5,7 +5,7 @@
 #include <sensor_imu.h>
 
 
-#define SAMPLETIME 0.005
+#define SAMPLETIME 0.0012
 
 class CompFilter {
 public:

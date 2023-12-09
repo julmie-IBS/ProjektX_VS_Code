@@ -9,7 +9,7 @@
 
 
 
-#define PI_BAUDRATE                 250000
+#define PI_BAUDRATE                 500000
 #define SERIAL_PI                   Serial
 
 
