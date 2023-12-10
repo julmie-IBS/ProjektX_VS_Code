@@ -13,7 +13,7 @@
 class PIDController {
 public:
     PIDController(CompFilter* CompFilter_1, Nrf24* Nrf24_1, motorhandler* motorhandler_1);
-    void calculateValues();
+    u_int8_t calculateValues();
     void armPID();
     void disarmPID();
 
@@ -29,7 +29,7 @@ private:
 
     int m_PIDisArmed=0;
 
-    float m_roll_kp=0.01;
+    float m_roll_kp=0.2;
     float m_roll_ki=0.01*SAMPLETIME;
     float m_roll_kd;
     float m_roll_prevError=0;
@@ -37,7 +37,7 @@ private:
 
 
 
-    float m_pitch_kp=0.01;
+    float m_pitch_kp=0.2;
     float m_pitch_ki=0.01*SAMPLETIME;
     float m_pitch_kd;
     float m_pitch_prevError=0;

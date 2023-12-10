@@ -12,13 +12,15 @@
   u_int8_t getNextState(u_int8_t state, Nrf24* Nrf24_1)
    {
    if((state==0) && ((Nrf24_1->m_PS3_buttons & 0x01)==0x01)){  //triangle
+    Serial.println("Change to State -> 1");
     return 1; 
    }
-   if((Nrf24_1->m_PS3_buttons & 0x08)==0x08){ //cross
+   if(((Nrf24_1->m_PS3_buttons) & 0x08)==0x08){ //cross
+    Serial.println("Change to State -> 0");
     return 0;
    }
 
-   return 0;
+   return state;
   } 
 
 
@@ -53,16 +55,8 @@ void loop() {
 //Serial.begin(9600);
 
 
-unsigned long previousMillis = 0;
-unsigned long currentMillis = 0;
 
 
-
-
-volatile uint16_t throttle_array[4]= {0,0,0,0};
-int count=0;
-
-//motorhandler_1.armMotors();
 
 
 u_int8_t state = 0;
@@ -73,6 +67,9 @@ while(1)
   IMU_1.fetchData();
   IMU_2.fetchData();
   Nrf24_1.fetchData();
+
+
+ 
 
   //CompFilter_1.calculateValues(0.0035 , 0.0247);      // Bias Calibration for ACC Values  (AngleBaised) in RAD
   
@@ -89,8 +86,23 @@ while(1)
 
     motorhandler_1.armMotors();             //  1000 x writeToMotors(0,0,0,0)        add arm flag in moterhandler class do this only ones
     CompFilter_1.calculateValues(0,0);
-    PID_1.calculateValues();
+    state = PID_1.calculateValues();
+    
     motorhandler_1.writeToMotorsSave(PID_1.m_Motor_dshotValues);
+
+
+
+
+
+
+
+    /*
+    
+    Serial.print("M4,");
+    Serial.print(Nrf24_1.m_PS3_buttons);
+    Serial.println(",");
+    */
+
     break;
 
     default:
@@ -99,7 +111,7 @@ while(1)
     
 
   }
-  
+    //delay(100);
     state=getNextState(state, &Nrf24_1);
 
 }

@@ -47,7 +47,7 @@ void PIDController::disarmPID()
 
 
 
-void PIDController::calculateValues() 
+uint8_t PIDController::calculateValues() 
 {
 
     // GET NRF24DATA
@@ -60,8 +60,8 @@ void PIDController::calculateValues()
     SP_nrf24_roll=SP_nrf24_roll/10;                         // -10° <-> 10°
     SP_nrf24_pitch=SP_nrf24_pitch/10;                       // -10° <-> 10°
     SP_nrf24_yaw = SP_nrf24_yaw;                            // -100  <->  100        
-    SP_nrf24_thrust=SP_nrf24_thrust/6.66  + 10;             //   0  <->  100
-
+    //SP_nrf24_thrust=SP_nrf24_thrust/6.66 + 10;             //   0  <->  100    ->   10  ->   25
+    SP_nrf24_thrust=SP_nrf24_thrust/20 + 2;             //   0  <->  100    ->   10  ->   25
 
     // GET COMP MEASUREMENT
     float MeasurePV_COMPFILTER_roll  = this->m_CompFilter_1->getRollHatDeg();         // expected Value -100  <->  100
@@ -122,39 +122,126 @@ void PIDController::calculateValues()
         M2 = SP_nrf24_thrust/6.66  + 10  +  output_pitch  +  output_roll;
         M3 = SP_nrf24_thrust/6.66  + 10  -  output_pitch  -  output_roll;
         M4 = SP_nrf24_thrust/6.66  + 10  -  output_pitch  +  output_roll;
-        */
-
+        
         M1 = SP_nrf24_thrust  +  output_pitch;                 
         M2 = SP_nrf24_thrust  +  output_pitch  +  output_roll;
         M3 = SP_nrf24_thrust;  
         M4 = SP_nrf24_thrust                   +  output_roll;
+        */
+
+
+
+        M1 = SP_nrf24_thrust  +  output_pitch  ;//-  output_roll;  
+        M2 = SP_nrf24_thrust  +  output_pitch  ;//+  output_roll;
+        M3 = SP_nrf24_thrust  -  output_pitch  ;//-  output_roll;
+        M4 = SP_nrf24_thrust  -  output_pitch  ;//+  output_roll;
+
+
+        
 
     }
 
+    Serial.println(M1);
+    Serial.println(M2);
+    Serial.println(M3);
+    Serial.println(M4);
+
+     
+
     if (M1 > 100) {M1 = 100;}
-    if (M1< 0 ) {M1 = 0;}
+    if (M1< 0 ) 
+    {
+        M1 = 0;
+        Serial.print("DEBUG1");
+        m_motorhandler_1->disarmMotors();
+        
+        
+        return 0;
+    
+    }
+
+
 
      if (M2 > 100) {M2 = 100;}
-    if (M2< 0 ) {M2 = 0;}
+    if (M2< 0 ) 
+    {
+        M2 = 0;
+        Serial.print("DEBUG2");
+        m_motorhandler_1->disarmMotors();
+        return 0;
+    }
 
     if (M3 > 100) {M3 = 100;}
-    if (M3< 0 ) {M3 = 0;}
+    if (M3< 0 ) 
+    {
+        M3 = 0;
+        Serial.print("DEBUG3");
+        m_motorhandler_1->disarmMotors();
+        return 0;
+    }
 
-     if (M4 > 100) {M4 = 100;}
-    if (M4< 0 ) {M4 = 0;}
+    if (M4 > 100) {M4 = 100;}
+    if (M4< 0 ) 
+    {
+        M4 = 0;
+        Serial.print("DEBUG4");
+        m_motorhandler_1->disarmMotors();
+        return 0;
+    }
+
+
+
+    
+Serial.print("SP_nrf24_thrust,");
+    Serial.print(SP_nrf24_thrust);
+    Serial.print(",");
+
+
+Serial.print("output_pitch,");
+    Serial.print(output_pitch);
+    Serial.print(",");
+
+    Serial.print("output_roll,");
+    Serial.print(output_roll);
+    Serial.print(",");
+
+
+
+
+
+
+
+    m_Motor_dshotValues[0]=m_motorhandler_1->getDshotLookup((int)(M1*10));
+    m_Motor_dshotValues[1]=m_motorhandler_1->getDshotLookup((int)(M2*10));
+    m_Motor_dshotValues[2]=m_motorhandler_1->getDshotLookup((int)(M3*10));
+    m_Motor_dshotValues[3]=m_motorhandler_1->getDshotLookup((int)(M4*10));
 
     
     
-    m_Motor_dshotValues[0]=m_motorhandler_1->getDshotLookup((int)M1*10);
-    m_Motor_dshotValues[1]=m_motorhandler_1->getDshotLookup((int)M2*10);
-    m_Motor_dshotValues[2]=m_motorhandler_1->getDshotLookup((int)M3*10);
-    m_Motor_dshotValues[3]=m_motorhandler_1->getDshotLookup((int)M4*10);
+    
+
+
+        Serial.print("M1,");
+    Serial.print(m_Motor_dshotValues[0]);
+    Serial.print(",");
+
+    Serial.print("M2,");
+    Serial.print(m_Motor_dshotValues[1]);
+    Serial.print(",");
+    Serial.print("M3,");
+
+    Serial.print(m_Motor_dshotValues[2]);
+      Serial.print(",");
+    Serial.print("M4,");
+
+    Serial.print(m_Motor_dshotValues[3]);
+    Serial.println(",");
 
 
 
 
 
-
+    return 1;
        
 
 
