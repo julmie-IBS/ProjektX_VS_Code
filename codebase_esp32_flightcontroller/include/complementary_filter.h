@@ -5,7 +5,7 @@
 #include <sensor_imu.h>
 
 
-#define SAMPLETIME 0.0018
+#define SAMPLETIME 0.0011
 
 #define GYRO_COMP_VALUE 0.49
 #define ACC_COMP_VALUE 0.01

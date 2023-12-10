@@ -30,16 +30,16 @@ private:
     int m_PIDisArmed=0;
 
     float m_roll_kp=0.2;
-    float m_roll_ki=0.01*SAMPLETIME;
-    float m_roll_kd;
+    float m_roll_ki=0.1*SAMPLETIME;
+    float m_roll_kd=0.01;
     float m_roll_prevError=0;
     float m_roll_integrationError=0;
 
 
 
     float m_pitch_kp=0.2;
-    float m_pitch_ki=0.01*SAMPLETIME;
-    float m_pitch_kd;
+    float m_pitch_ki=0.1*SAMPLETIME;
+    float m_pitch_kd=0.01;
     float m_pitch_prevError=0;
     float m_pitch_integrationError=0;
 

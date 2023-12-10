@@ -35,7 +35,7 @@
 #define MPU6050_LOWPASS_FILTER_5Hz      6
 
 
-#define ACC_ALPHA_FILTER_RATE           0.1
+#define ACC_ROLLING_BUFFER_LEN          10
 
 
 
@@ -59,6 +59,12 @@ public:
     float m_imuAccX=0;
     float m_imuAccY=0;
     float m_imuAccZ=0;
+
+
+    float m_imuAccXRollingBuffer[ACC_ROLLING_BUFFER_LEN]={0};
+    float m_imuAccYRollingBuffer[ACC_ROLLING_BUFFER_LEN]={0};
+    float m_imuAccZRollingBuffer[ACC_ROLLING_BUFFER_LEN]={0};
+
     float m_imuGyroX;
     float m_imuGyroY;
     float m_imuGyroZ;
@@ -85,6 +91,8 @@ private:
     void setLowPassFilter();
     void measureGyroBias();
     void calibrateValues();
+    void applyAccRollBuffer();
+    int m_accRollBufferPos=0;
     int m_accRange = MPU6050_ACC_RANGE_2G;
     int m_gyroRange = MPU6050_GYR_RANGE_250;
     int m_lowpassfilter = MPU6050_LOWPASS_FILTER_44Hz;

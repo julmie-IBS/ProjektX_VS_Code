@@ -57,11 +57,11 @@ uint8_t PIDController::calculateValues()
     float SP_nrf24_thrust = this->m_Nrf24_1->getThrust();       // expected Value    0  <->  100
 
     // MAP NRF24 DATA
-    SP_nrf24_roll=SP_nrf24_roll/10;                         // -10° <-> 10°
-    SP_nrf24_pitch=SP_nrf24_pitch/10;                       // -10° <-> 10°
+    SP_nrf24_roll=SP_nrf24_roll/20;                         // -5° <-> 5°
+    SP_nrf24_pitch=SP_nrf24_pitch/20;                       // -5° <-> 5°
     SP_nrf24_yaw = SP_nrf24_yaw;                            // -100  <->  100        
     //SP_nrf24_thrust=SP_nrf24_thrust/6.66 + 10;             //   0  <->  100    ->   10  ->   25
-    SP_nrf24_thrust=SP_nrf24_thrust/20 + 2;             //   0  <->  100    ->   10  ->   25
+    SP_nrf24_thrust=SP_nrf24_thrust/8 + 12;             //   0  <->  100    ->   10  ->   25
 
     // GET COMP MEASUREMENT
     float MeasurePV_COMPFILTER_roll  = this->m_CompFilter_1->getRollHatDeg();         // expected Value -100  <->  100
@@ -70,7 +70,7 @@ uint8_t PIDController::calculateValues()
 
     if (m_PIDisArmed ==0)
     {
-        if ((abs(MeasurePV_COMPFILTER_roll) > 3)||(abs(MeasurePV_COMPFILTER_pitch) > 3))
+        if ((abs(MeasurePV_COMPFILTER_roll) > 1.5)||(abs(MeasurePV_COMPFILTER_pitch) > 1.5))
         {
             armPID();
         }
@@ -131,10 +131,10 @@ uint8_t PIDController::calculateValues()
 
 
 
-        M1 = SP_nrf24_thrust  +  output_pitch  ;//-  output_roll;  
-        M2 = SP_nrf24_thrust  +  output_pitch  ;//+  output_roll;
-        M3 = SP_nrf24_thrust  -  output_pitch  ;//-  output_roll;
-        M4 = SP_nrf24_thrust  -  output_pitch  ;//+  output_roll;
+        M1 = SP_nrf24_thrust  +  output_pitch  -  output_roll;  
+        M2 = SP_nrf24_thrust  +  output_pitch  +  output_roll;
+        M3 = SP_nrf24_thrust  -  output_pitch  -  output_roll;
+        M4 = SP_nrf24_thrust  -  output_pitch  +  output_roll;
 
 
         
@@ -221,7 +221,7 @@ Serial.print("output_pitch,");
     
 
 
-        Serial.print("M1,");
+    Serial.print("M1,");
     Serial.print(m_Motor_dshotValues[0]);
     Serial.print(",");
 

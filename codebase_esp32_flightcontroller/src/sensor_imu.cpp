@@ -106,6 +106,40 @@
     }
 
 
+    void IMU::applyAccRollBuffer()
+    {   
+        //RESET ROLLING BUFFER POSITION IN NEEDED
+        if (m_accRollBufferPos>=ACC_ROLLING_BUFFER_LEN)
+        {
+            m_accRollBufferPos=0;
+        }
+
+        // WRITE THE VALUE TO THE BUFFER 
+        m_imuAccXRollingBuffer[m_accRollBufferPos]=m_imuAccX;
+        m_imuAccYRollingBuffer[m_accRollBufferPos]=m_imuAccY;
+        m_imuAccZRollingBuffer[m_accRollBufferPos]=m_imuAccZ;
+
+        //ACCUMULATE ROLLING BUFFER
+        m_imuAccX=0;
+        m_imuAccY=0;
+        m_imuAccZ=0;
+
+
+        for (int i = 0; i < ACC_ROLLING_BUFFER_LEN; ++i) 
+        {
+            m_imuAccX += m_imuAccXRollingBuffer[i];
+            m_imuAccY += m_imuAccYRollingBuffer[i];
+            m_imuAccZ += m_imuAccZRollingBuffer[i];
+        }
+
+        m_imuAccX = m_imuAccX/ACC_ROLLING_BUFFER_LEN;
+        m_imuAccY = m_imuAccY/ACC_ROLLING_BUFFER_LEN;
+        m_imuAccZ = m_imuAccZ/ACC_ROLLING_BUFFER_LEN;
+
+        m_accRollBufferPos++;
+    }
+
+
     
     int IMU::triggerMeasurement()
     {
@@ -238,9 +272,8 @@
 
 
 
-
         this->calibrateValues();
-
+        this->applyAccRollBuffer();
 
 
 

@@ -26,7 +26,7 @@
 #define CLR_MOT_FOUR                    GPIO.out_w1tc |= 134217728 //Pin27: 2^27
 #define SET_MOT_FOUR                    GPIO.out_w1ts |= 134217728
 
-#define MAXIMAL_MOTOR_VALUE             700
+#define MAXIMAL_MOTOR_VALUE             950
 #define MINIMAL_MOTOR_VALUE             100
 
 #define MAXIMAL_MOTOR_ADJUSTMENT_RATE   100

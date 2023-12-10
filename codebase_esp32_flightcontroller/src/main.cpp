@@ -11,7 +11,7 @@
 
   u_int8_t getNextState(u_int8_t state, Nrf24* Nrf24_1)
    {
-   if((state==0) && ((Nrf24_1->m_PS3_buttons & 0x01)==0x01)){  //triangle
+   if((state==0) && ((Nrf24_1->m_PS3_buttons)==0x01)){  //triangle
     Serial.println("Change to State -> 1");
     return 1; 
    }
