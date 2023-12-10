@@ -39,6 +39,73 @@
         return 0;
 
     }
+
+
+     void IMU::DEBUG(int debugValue)
+
+    {   
+
+        if (debugValue == 0)
+        {
+            // DEBUG ACC and GYRO 
+            Serial.print("IMU_ACCx,");
+            Serial.print(m_imuAccX, 4);
+            Serial.print(",");
+            Serial.print("IMU_ACCy,");
+            Serial.print(m_imuAccY, 4);
+            Serial.print(",");
+            Serial.print("IMU_ACCz,");
+            Serial.print(m_imuAccZ, 4);
+            Serial.print(",");
+            Serial.print("IMU_GYROx,");
+            Serial.print(m_imuGyroX);
+            Serial.print(",");                          // Y -> Pitch Bodyframe
+            Serial.print("IMU_GYROy,");
+            Serial.print(m_imuGyroY);
+            Serial.print(",");
+            Serial.print("IMU_GYROz,");
+            Serial.print(m_imuGyroZ);
+            Serial.println(",");
+        }
+
+        if (debugValue == 1)
+        {
+            // DEBUG ACCELEROMETER
+            Serial.print("IMU_ACCx,");
+            Serial.print(m_imuAccX, 4);
+            Serial.print(",");
+            Serial.print("IMU_ACCy,");
+            Serial.print(m_imuAccY, 4);
+            Serial.print(",");
+            Serial.print("IMU_ACCz,");
+            Serial.print(m_imuAccZ, 4);
+            Serial.println(",");
+        }
+
+         if (debugValue == 2)
+        {
+            // DEBUG GYROSCOPE
+            Serial.print("IMU_GYROx,");
+            Serial.print(m_imuGyroX);
+            Serial.print(",");                          // Y -> Pitch Bodyframe
+            Serial.print("IMU_GYROy,");
+            Serial.print(m_imuGyroY);
+            Serial.print(",");
+            Serial.print("IMU_GYROz,");
+            Serial.print(m_imuGyroZ);
+            Serial.println(",");
+        }
+
+
+
+
+
+
+
+
+    }
+
+
     
     int IMU::triggerMeasurement()
     {

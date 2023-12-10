@@ -21,6 +21,7 @@ public:
     float getRollHatRad();  
     float getPitchHatRad();
     float getUseAcc();
+    void DEBUG();
 
 
 

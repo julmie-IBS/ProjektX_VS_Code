@@ -41,7 +41,19 @@
         return this->m_useAcc;
     }
 
+    void CompFilter::DEBUG()
+    {
+        Serial.print("UseACC,");
+        Serial.print(this->getUseAcc());
+        Serial.print(",");
+        Serial.print("roll,");
+        Serial.print(this->getRollHatDeg());
+        Serial.print(",");
+        Serial.print("pitch,");
+        Serial.print(this->getPitchHatDeg());
+        Serial.println(",");
 
+    }
 
     
     

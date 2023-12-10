@@ -54,6 +54,7 @@ public:
     int fetchData() override;
     byte* getData() override;
     int getLength() override;
+    void DEBUG(int debugValue);
     
     float m_imuAccX=0;
     float m_imuAccY=0;
