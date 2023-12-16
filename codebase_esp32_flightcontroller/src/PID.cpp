@@ -156,7 +156,7 @@ uint8_t PIDController::calculateValues()
         m_motorhandler_1->disarmMotors();
         
         
-        return 0;
+        return 2;
     
     }
 
@@ -168,7 +168,7 @@ uint8_t PIDController::calculateValues()
         M2 = 0;
         Serial.print("DEBUG2");
         m_motorhandler_1->disarmMotors();
-        return 0;
+        return 2;
     }
 
     if (M3 > 100) {M3 = 100;}
@@ -177,7 +177,7 @@ uint8_t PIDController::calculateValues()
         M3 = 0;
         Serial.print("DEBUG3");
         m_motorhandler_1->disarmMotors();
-        return 0;
+        return 2;
     }
 
     if (M4 > 100) {M4 = 100;}
@@ -186,7 +186,7 @@ uint8_t PIDController::calculateValues()
         M4 = 0;
         Serial.print("DEBUG4");
         m_motorhandler_1->disarmMotors();
-        return 0;
+        return 2;
     }
 
 
@@ -241,7 +241,7 @@ Serial.print("output_pitch,");
 
 
 
-    return 1;
+    return 0;
        
 
 
