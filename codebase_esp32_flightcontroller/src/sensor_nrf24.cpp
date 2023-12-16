@@ -33,16 +33,36 @@ int Nrf24::fetchData()
 {
     
     if (m_radio.available()) 
-        {
-            m_radio.read(m_dataBuffer, 5);
+      {
+          m_radio.read(m_dataBuffer, 6);
 
-            m_PS3_lx=m_dataBuffer[0];
-            m_PS3_ly=m_dataBuffer[1];
-            m_PS3_rx=m_dataBuffer[2];
-            m_PS3_ry=m_dataBuffer[3];
-            m_PS3_buttons=m_dataBuffer[4];
+          m_PS3_lx=m_dataBuffer[0];
+          m_PS3_ly=m_dataBuffer[1];
+          m_PS3_rx=m_dataBuffer[2];
+          m_PS3_ry=m_dataBuffer[3];
+          m_PS3_buttons=m_dataBuffer[4];
 
-        }     
+          if (m_PS3_lastHeartbeatValue==m_dataBuffer[5])
+          {
+              m_PS3_badHeartbeatCount++;
+          }
+          else
+          {
+              m_PS3_badHeartbeatCount=0;
+          }
+          m_PS3_lastHeartbeatValue=m_dataBuffer[5];
+      }     
+    else
+    {
+      m_PS3_badHeartbeatCount++;
+    }
+
+    if (m_PS3_badHeartbeatCount > 100)
+    {
+      return 1;
+    }
+
+
     return 0;
     
 }

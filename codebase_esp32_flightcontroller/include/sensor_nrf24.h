@@ -34,13 +34,18 @@ public:
 private:
 
     RF24 m_radio ;
-    int m_length = 5;
-    byte m_dataBuffer[5];
+    int m_length = 6;
+    byte m_dataBuffer[6];
 
     int8_t m_PS3_lx=0;
     int8_t m_PS3_ly=0;
     int8_t m_PS3_rx=0;
     int8_t m_PS3_ry=0;
+    int8_t m_PS3_lastHeartbeatValue=0;
+    int8_t m_PS3_badHeartbeatCount=0;
+
+    
+
 
 };
 
