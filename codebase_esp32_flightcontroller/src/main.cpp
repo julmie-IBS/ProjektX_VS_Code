@@ -9,14 +9,31 @@
 
 
 
-  u_int8_t getNextState(u_int8_t state, Nrf24* Nrf24_1)
+  u_int8_t getNextState(u_int8_t state, Nrf24* Nrf24_1, int rc)
    {
+
+    if (rc==1)
+    {
+      Serial.println("Change to State [NRF24 ERROR] -> 0");
+      return 0;
+    }
+
+    if (rc==2)
+    {
+      Serial.println("Change to State [PID ERROR] -> 0");
+      return 0;
+    }
+
+
+
+
+
    if((state==0) && ((Nrf24_1->m_PS3_buttons)==0x01)){  //triangle
-    Serial.println("Change to State -> 1");
+    Serial.println("Change to State [BUTTON ACTION] -> 1");
     return 1; 
    }
    if(((Nrf24_1->m_PS3_buttons) & 0x08)==0x08){ //cross
-    Serial.println("Change to State -> 0");
+    Serial.println("Change to State [BUTTON ACTION] -> 0");
     return 0;
    }
 
@@ -61,12 +78,13 @@ void loop() {
 
 u_int8_t state = 0;
 
+int rc=0;
 
 while(1)
 {
   IMU_1.fetchData();
   IMU_2.fetchData();
-  Nrf24_1.fetchData();
+  rc=Nrf24_1.fetchData();
 
 
  
@@ -86,7 +104,7 @@ while(1)
 
     motorhandler_1.armMotors();             //  1000 x writeToMotors(0,0,0,0)        add arm flag in moterhandler class do this only ones
     CompFilter_1.calculateValues(0,0);
-    state = PID_1.calculateValues();
+    rc = PID_1.calculateValues();
     
     motorhandler_1.writeToMotorsSave(PID_1.m_Motor_dshotValues);
 
@@ -108,7 +126,7 @@ while(1)
 
   }
     //delay(100);
-    state=getNextState(state, &Nrf24_1);
+    state=getNextState(state, &Nrf24_1,rc);
 
 }
 }
