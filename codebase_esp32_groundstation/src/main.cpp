@@ -39,7 +39,7 @@ Ps3.begin("34:86:5d:fc:51:da");
 
 
 
-
+    u_int8_t globalCount=0;
 
     while (1)
     {
@@ -68,7 +68,7 @@ Ps3.begin("34:86:5d:fc:51:da");
   //byte* payload = static_cast<byte*>(ptr);
 
  // Serial.println(sizeof(payload));
-  byte payload[5];
+  byte payload[6];
   
   payload[0]=PS3_lx;
   payload[1]=PS3_ly;
@@ -76,11 +76,23 @@ Ps3.begin("34:86:5d:fc:51:da");
   payload[3]=PS3_ry;
   //memcpy(payload[4], &PS3_buttons, sizeof(PS3_buttons));
   payload[4]=PS3_buttons;
+ 
+
+
+  if (Ps3.isConnected())
+  {
+    payload[5]=globalCount % 2;
+  }
+  else
+  {
+    payload[5]=0;
+  }
+  
   
   //int8_t payload[sizeof(PS3_ly)];
   //memcpy(payload, &PS3_ly, sizeof(PS3_ly));
   
-  radio.write((void*)payload, 5 );
+  radio.write((void*)payload, 6 );
 
  // Serial.println(); Serial.println(payload[0]);Serial.println(payload[1]);Serial.println(payload[2]);Serial.println(payload[3]);Serial.println(payload[4]);
 
@@ -92,6 +104,7 @@ Ps3.begin("34:86:5d:fc:51:da");
   delay(5);
   //delay(500);
 
+  globalCount++;
   }
 
 }
